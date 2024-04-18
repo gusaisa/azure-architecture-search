@@ -17,7 +17,9 @@ public class AzureSearchService(SearchClient searchClient) : ISearchService
         }
 
         var documentContents = string.Empty;
-        var top = overrides?.Top ?? 3;
+        // This controls how many documents are return from the query.
+        // Increase the number will make the response better but slower
+        var top = overrides?.Top ?? 10;
         var exclude_category = overrides?.ExcludeCategory;
         var filter = exclude_category == null ? string.Empty : $"category ne '{exclude_category}'";
         var useSemanticRanker = overrides?.SemanticRanker ?? false;
@@ -122,7 +124,9 @@ public class AzureSearchService(SearchClient searchClient) : ISearchService
         RequestOverrides? overrides = null,
         CancellationToken cancellationToken = default)
     {
-        var top = overrides?.Top ?? 3;
+        // This controls how many images are return from the query.
+        // Increase the number may make the response better but slower
+        var top = overrides?.Top ?? 5;
         var exclude_category = overrides?.ExcludeCategory;
         var filter = exclude_category == null ? string.Empty : $"category ne '{exclude_category}'";
 

@@ -209,6 +209,12 @@ static async ValueTask UploadBlobsAndCreateIndexAsync(
         var url = await UploadBlobAsync(fileName, blobName, container);
         await embeddingService.EmbedImageBlobAsync(stream, url, imageName);
     }
+    else if (Path.GetExtension(fileName).Equals(".md", StringComparison.OrdinalIgnoreCase))
+    {
+        var blobName = BlobNameFromFilePage(fileName);
+        await UploadBlobAsync(fileName, blobName, container);
+        await embeddingService.EmbedMdBlobAsync(fileName);
+    }
     else
     {
         var blobName = BlobNameFromFilePage(fileName);
