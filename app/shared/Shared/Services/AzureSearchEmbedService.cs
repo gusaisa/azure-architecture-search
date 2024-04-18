@@ -73,6 +73,34 @@ public sealed partial class AzureSearchEmbedService(
         }
     }
 
+    public async Task<bool> EmbedMdBlobAsync(string fileName)
+    {
+        try
+        {
+            Console.WriteLine($"Embedding blob '{fileName}'");
+            var str = File.ReadAllText(fileName);
+            var pageMap = new PageDetail()
+            {
+                Index = 0,
+                Offset = 0,
+                Text = str
+            };
+            var sections = CreateSections([pageMap], fileName);
+            await IndexSectionsAsync(sections);
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Failed to Embedding blob '{fileName}'");
+
+            logger?.LogError(
+                exception, "Failed to embed blob '{BlobName}'", fileName);
+
+            throw;
+        }
+    }
+
     public async Task<bool> EmbedImageBlobAsync(
         Stream imageStream,
         string imageUrl,

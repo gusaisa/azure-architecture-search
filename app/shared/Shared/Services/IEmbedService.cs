@@ -16,6 +16,12 @@ public interface IEmbedService
         string blobName);
 
     /// <summary>
+    /// Embeds the given md blob into the embedding service.
+    /// </summary>
+    Task<bool> EmbedMdBlobAsync(string blobName);
+
+
+    /// <summary>
     /// Embeds the given image blob into the embedding service.
     /// </summary>
     Task<bool> EmbedImageBlobAsync(

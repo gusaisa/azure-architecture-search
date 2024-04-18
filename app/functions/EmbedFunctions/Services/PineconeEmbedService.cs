@@ -15,6 +15,11 @@ internal sealed class PineconeEmbedService : IEmbedService
         throw new NotImplementedException();
     }
 
+    public Task<bool> EmbedMdBlobAsync(string blobName)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<bool> EmbedPDFBlobAsync(Stream blobStream, string blobName) => throw new NotImplementedException(
             "Pinecone embedding isn't implemented.");
 

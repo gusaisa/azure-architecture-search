@@ -118,14 +118,21 @@ standard plan AND dental AND employee benefit.
         SupportingImageRecord[]? images = default;
         if (_visionService is not null)
         {
-            var queryEmbeddings = await _visionService.VectorizeTextAsync(query ?? question, cancellationToken);
-            images = await _searchClient.QueryImagesAsync(query, queryEmbeddings.vector, overrides, cancellationToken);
+            try
+            {
+                var queryEmbeddings = await _visionService.VectorizeTextAsync(query ?? question, cancellationToken);
+                images = await _searchClient.QueryImagesAsync(query, queryEmbeddings.vector, overrides, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         // step 3
         // put together related docs and conversation history to generate answer
-        var answerChat = new ChatHistory(
-            "You are a system assistant who helps the company employees with their questions. Be brief in your answers");
+         var answerChat = new ChatHistory(
+            "You are a cloud solution expert who helps the developers with their questions related to cloud infrastructure. Be precise about the answer, but answer the question as detailed as possible.");
 
         // add chat history
         foreach (var message in history)
@@ -149,7 +156,11 @@ standard plan AND dental AND employee benefit.
 
 Answer question based on available source and images.
 Your answer needs to be a json object with answer and thoughts field.
-Don't put your answer between ```json and ```, return the json string directly. e.g {{""answer"": ""I don't know"", ""thoughts"": ""I don't know""}}";
+Don't put your answer between ```json and ```, return the json string directly. e.g {{""answer"": ""I don't know"", ""thoughts"": ""I don't know""}}.
+Meawhile, escape all the new line characters in the answer that's invalid in a json string. e.g. ""My
+test
+asnwer"" needs to be converted to ""My\ntest\nanswer""
+";
 
             var tokenRequestContext = new TokenRequestContext(new[] { "https://storage.azure.com/.default" });
             var sasToken = await (_tokenCredential?.GetTokenAsync(tokenRequestContext, cancellationToken) ?? throw new InvalidOperationException("Failed to get token"));
